@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <HelicopterParenting_EnableFloorDrawFixLabel>Floor drawing safety</HelicopterParenting_EnableFloorDrawFixLabel>
+  <HelicopterParenting_EnableFloorDrawFixTooltip>Validate floor-drawing spots against safer indoor temperatures.</HelicopterParenting_EnableFloorDrawFixTooltip>
+  <HelicopterParenting_EnableNatureRunFixLabel>Nature running safety</HelicopterParenting_EnableNatureRunFixLabel>
+  <HelicopterParenting_EnableNatureRunFixTooltip>Validate nature-running targets against edge and threat safety rules.</HelicopterParenting_EnableNatureRunFixTooltip>
+  <HelicopterParenting_EnableSkyDreamFixLabel>Sky dreaming safety</HelicopterParenting_EnableSkyDreamFixLabel>
+  <HelicopterParenting_EnableSkyDreamFixTooltip>Validate or replace unsafe sky-dreaming spots.</HelicopterParenting_EnableSkyDreamFixTooltip>
+  <HelicopterParenting_AvoidPredatorsLabel>Avoid nearby predators</HelicopterParenting_AvoidPredatorsLabel>
+  <HelicopterParenting_AvoidPredatorsTooltip>Reject outdoor spots when a predator is within the configured radius.</HelicopterParenting_AvoidPredatorsTooltip>
+  <HelicopterParenting_RejectDuringThreatsLabel>Block outdoor activities during threats</HelicopterParenting_RejectDuringThreatsLabel>
+  <HelicopterParenting_RejectDuringThreatsTooltip>Disable nature running and sky dreaming during active hostile threats.</HelicopterParenting_RejectDuringThreatsTooltip>
+  <HelicopterParenting_MapEdgeBufferLabel>Map edge buffer: {0}</HelicopterParenting_MapEdgeBufferLabel>
+  <HelicopterParenting_PredatorScanRadiusLabel>Predator scan radius: {0}</HelicopterParenting_PredatorScanRadiusLabel>
+</LanguageData>
