@@ -14,7 +14,7 @@
 - Assembly name: `HelicopterParenting`
 - Namespace: `HelicopterParenting`
 - Target: RimWorld 1.6, `net48`, Harmony 2.4.x
-- DLC requirement: Biotech
+- DLC requirement: Biotech (`Ludeon.RimWorld.Biotech`)
 
 ## Scaffold Baseline
 
@@ -44,6 +44,7 @@
 |---|---|
 | Indoor draw spot evaluator | Score or accept comfortable/safe floor-drawing rooms and produce a valid draw pair |
 | Outdoor safety validator | Check edge distance, optional predator radius, and hostile-threat gating |
+| Nature-running search helper | Reproduce vanilla nature-running target search with additional cell safety filters because the vanilla utility has no injection point |
 | Sky-dream outdoor search helper | Perform a cell-level replacement search for unroofed outdoor spots because vanilla's shared utility does not expose a cell validator |
 
 ## Settings
@@ -63,9 +64,14 @@
 - `LearningGiver_Floordrawing.TryFindFloordrawingSpots` only rejects `Danger.Deadly`, so freezer rooms at `Danger.Some` remain valid
 - `LearningGiver_Floordrawing.CanFloorDrawFrom` and `TryFloorDrawCellPair` are public and reusable; `CanDrawOn` is private, so its logic must be inlined or reflected if exact vanilla semantics are needed
 - `NatureRunningUtility.TryFindNatureInterestTarget` already calls `JoyUtility.EnjoyableOutsideNow(searcher)`
+- `NatureRunningUtility.TryFindNatureInterestTarget` is also used by `JobDriver_NatureRunning.FindInterestingThing`, so patching it affects both job assignment and in-job retargeting
 - `LearningGiver_Skydreaming.TryGiveJob` does not call `JoyUtility.EnjoyableOutsideNow(pawn)`
+- `JobDriver_Skydreaming` does not re-check weather, threats, or predator proximity after the job starts; a selection-only patch changes startup behavior, not mid-job interruption behavior
 - `RCellFinder.TryFindAllowedUnroofedSpotOutsideColony` exposes only a region-level `extraRegionValidator`; it cannot guarantee cell-level edge filtering by itself
+- `RCellFinder.TryFindAllowedUnroofedSpotOutsideColony` has one vanilla caller in 1.6: `LearningGiver_Skydreaming`
+- `RCellFinder.IsGoodDestinationFor` is private, so any custom sky-dream search helper must inline equivalent destination checks rather than call the vanilla helper directly
 - `GenHostility.AnyHostileActiveThreatToPlayer(Map)` exists and is a valid threat gate for outdoor activity rejection
+- `JobGiver_Learn` randomizes the child's active learning desires and continues to the next one when `CanDo` fails or `TryGiveJob` returns `null`, so rejecting one activity cleanly falls through to another active desire
 
 ## Save compatibility
 
@@ -87,9 +93,32 @@
 - Learning-giver method replacements by other mods can bypass these postfixes entirely
 - Shared utility patching on `RCellFinder` is intentionally avoided for sky dreaming to reduce cross-mod blast radius
 
+## Decision Points
+
+### M2 target ordering
+
+The source design suggested preferring outdoor targets closer to base. Vanilla does not expose a colony-center heuristic here, and `NatureRunningUtility.TryFindNatureInterestTarget` already prefers the valid target closest to the pawn.
+
+Current working assumption for implementation prep: preserve vanilla nearest-from-pawn ordering and do not add a custom base-center heuristic in M2.
+
+### M3 fallback behavior
+
+The source design currently says two different things when sky dreaming finds an unsafe vanilla target and no safe replacement exists:
+
+- one section says keep the vanilla target
+- the detailed patch section and milestone notes say null the job
+
+Current working assumption for implementation prep: null the job, because it is the safer behavior and matches `MILESTONES.md`. If that changes, the design doc should be normalized before coding M3.
+
+### M3 interruption scope
+
+Resolved for the first implementation pass: M3 is selection-only. If the mod only patches target selection, sky dreaming will still continue after a raid, toxic fallout, or bad weather begins mid-job because `JobDriver_Skydreaming` never revalidates those conditions. Do not touch `JobDriver_Skydreaming` in M1-M3.
+
 ## In Progress
 
-The current design is ready for scaffold work once two implementation assumptions are carried forward explicitly:
+The current design is ready for implementation once the following source-backed assumptions are carried forward explicitly:
 
 1. The scaffold should include a dedicated outdoor safety helper and a dedicated sky-dream replacement helper, not just three isolated patch files.
 2. The template solution file must be corrected from `Any CPU` to `AnyCPU` everywhere before the first build, or Visual Studio can silently skip the project.
+3. M2 requires a nature-running search helper that mirrors the vanilla BFS constraints; post-validating the chosen cell is not enough if the design expects a real safe replacement.
+4. M3 is selection-only for the first implementation pass; do not patch the sky-dream job driver.

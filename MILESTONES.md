@@ -22,15 +22,17 @@ Dependencies: scaffold complete, settings scaffold complete
 ### M2 - Nature running safety
 
 - Add outdoor target validation for edge distance, optional predator radius, and hostile-threat rejection
-- Re-run target selection when vanilla picks an unsafe destination
+- Re-run target selection with a vanilla-shaped search helper when vanilla picks an unsafe destination
+- Preserve vanilla nearest-from-pawn ordering; do not add a separate colony-center heuristic in this milestone
 
-Dependencies: shared outdoor safety helper, settings values
+Dependencies: shared outdoor safety helper, settings values, nature-running search helper that preserves vanilla away-from-base rules
 
 ### M3 - Sky dreaming safety
 
 - Add missing `JoyUtility.EnjoyableOutsideNow(pawn)` gate
 - Validate or replace unsafe sky-dream targets with a dedicated cell-level outdoor search
 - Null the job when no safe replacement exists
+- Keep M3 selection-only; do not modify `JobDriver_Skydreaming` in this milestone
 
 Dependencies: shared outdoor safety helper, dedicated sky-dream search helper
 

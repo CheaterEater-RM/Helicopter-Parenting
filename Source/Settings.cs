@@ -5,21 +5,36 @@ namespace HelicopterParenting
 {
     public class HelicopterParenting_Settings : ModSettings
     {
-        public int mapEdgeBuffer = 15;
+        private const int DefaultMapEdgeBuffer = 15;
+
+        private const int DefaultPredatorScanRadius = 15;
+
+        public int mapEdgeBuffer = DefaultMapEdgeBuffer;
         public bool avoidPredators;
-        public int predatorScanRadius = 15;
+        public int predatorScanRadius = DefaultPredatorScanRadius;
         public bool rejectDuringThreats = true;
         public bool enableFloorDrawFix = true;
         public bool enableNatureRunFix = true;
         public bool enableSkyDreamFix = true;
 
+        public void ResetToDefaults()
+        {
+            mapEdgeBuffer = DefaultMapEdgeBuffer;
+            avoidPredators = false;
+            predatorScanRadius = DefaultPredatorScanRadius;
+            rejectDuringThreats = true;
+            enableFloorDrawFix = true;
+            enableNatureRunFix = true;
+            enableSkyDreamFix = true;
+        }
+
         public override void ExposeData()
         {
             base.ExposeData();
 
-            Scribe_Values.Look(ref mapEdgeBuffer, "mapEdgeBuffer", 15);
+            Scribe_Values.Look(ref mapEdgeBuffer, "mapEdgeBuffer", DefaultMapEdgeBuffer);
             Scribe_Values.Look(ref avoidPredators, "avoidPredators", false);
-            Scribe_Values.Look(ref predatorScanRadius, "predatorScanRadius", 15);
+            Scribe_Values.Look(ref predatorScanRadius, "predatorScanRadius", DefaultPredatorScanRadius);
             Scribe_Values.Look(ref rejectDuringThreats, "rejectDuringThreats", true);
             Scribe_Values.Look(ref enableFloorDrawFix, "enableFloorDrawFix", true);
             Scribe_Values.Look(ref enableNatureRunFix, "enableNatureRunFix", true);
@@ -67,6 +82,12 @@ namespace HelicopterParenting
             {
                 Settings.predatorScanRadius = Mathf.Clamp(Mathf.RoundToInt(listing.Slider(Settings.predatorScanRadius, 5f, 50f)), 5, 50);
                 listing.Label("HelicopterParenting_PredatorScanRadiusLabel".Translate(Settings.predatorScanRadius));
+            }
+
+            listing.GapLine();
+            if (listing.ButtonText("HelicopterParenting_ResetSettingsLabel".Translate()))
+            {
+                Settings.ResetToDefaults();
             }
 
             listing.End();

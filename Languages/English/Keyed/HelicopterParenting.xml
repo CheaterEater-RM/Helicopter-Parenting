@@ -12,4 +12,5 @@
   <HelicopterParenting_RejectDuringThreatsTooltip>Disable nature running and sky dreaming during active hostile threats.</HelicopterParenting_RejectDuringThreatsTooltip>
   <HelicopterParenting_MapEdgeBufferLabel>Map edge buffer: {0}</HelicopterParenting_MapEdgeBufferLabel>
   <HelicopterParenting_PredatorScanRadiusLabel>Predator scan radius: {0}</HelicopterParenting_PredatorScanRadiusLabel>
+  <HelicopterParenting_ResetSettingsLabel>Reset to defaults</HelicopterParenting_ResetSettingsLabel>
 </LanguageData>
