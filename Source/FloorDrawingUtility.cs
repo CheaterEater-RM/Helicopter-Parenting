@@ -6,6 +6,10 @@ namespace HelicopterParenting
 {
     internal static class FloorDrawingUtility
     {
+        private const int MaxRegionsSearch = 40;
+
+        private const int MaxRegionsSearchDesperate = 200;
+
         private static readonly IntVec3[] Offsets =
         {
             IntVec3.East,
@@ -110,45 +114,67 @@ namespace HelicopterParenting
 
         private static bool TryFindBestCandidateForPass(Pawn pawn, bool comfortableOnly, bool desperate, out Candidate bestCandidate)
         {
-            bestCandidate = Candidate.Invalid;
+            Candidate foundBestCandidate = Candidate.Invalid;
+            TraverseParms traverseParms = TraverseParms.For(pawn, Danger.None);
+            int maxRegions = desperate ? MaxRegionsSearchDesperate : MaxRegionsSearch;
 
-            foreach (IntVec3 root in pawn.Map.areaManager.Home.ActiveCells)
+            RegionTraverser.BreadthFirstTraverse(pawn.Position, pawn.Map, (Region from, Region region) => region.Allows(traverseParms, isDestination: false), delegate(Region region)
             {
-                if (!LearningGiver_Floordrawing.CanFloorDrawFrom(root, pawn))
+                if (region.IsForbiddenEntirely(pawn) || region.DangerFor(pawn) == Danger.Deadly)
+                {
+                    return false;
+                }
+
+                region.TryFindRandomCellInRegion(delegate(IntVec3 cell)
+                {
+                    if (!TryBuildCandidateFromRoot(pawn, cell, desperate, out Candidate candidate) || !MatchesTemperaturePass(candidate, comfortableOnly))
+                    {
+                        return false;
+                    }
+
+                    if (candidate.IsBetterThan(foundBestCandidate))
+                    {
+                        foundBestCandidate = candidate;
+                    }
+
+                    return true;
+                }, out IntVec3 _);
+
+                return false;
+            }, maxRegions);
+
+            bestCandidate = foundBestCandidate;
+            return bestCandidate.IsValid;
+        }
+
+        private static bool TryBuildCandidateFromRoot(Pawn pawn, IntVec3 root, bool desperate, out Candidate candidate)
+        {
+            candidate = Candidate.Invalid;
+
+            if (!LearningGiver_Floordrawing.CanFloorDrawFrom(root, pawn))
+            {
+                return false;
+            }
+
+            bool canDrawOnRoot = CanDrawOn(root, pawn.Map, desperate);
+            for (int index = 0; index < Offsets.Length; index++)
+            {
+                IntVec3 companion = root + Offsets[index];
+                if (!LearningGiver_Floordrawing.CanFloorDrawFrom(companion, pawn))
                 {
                     continue;
                 }
 
-                bool canDrawOnRoot = CanDrawOn(root, pawn.Map, desperate);
-                for (int index = 0; index < Offsets.Length; index++)
+                if (LearningGiver_Floordrawing.TryFloorDrawCellPair(companion, canDrawOnRoot, pawn, desperate, out bool shouldDrawOnRoot))
                 {
-                    IntVec3 companion = root + Offsets[index];
-                    if (!LearningGiver_Floordrawing.CanFloorDrawFrom(companion, pawn))
-                    {
-                        continue;
-                    }
-
-                    if (!LearningGiver_Floordrawing.TryFloorDrawCellPair(companion, canDrawOnRoot, pawn, desperate, out bool shouldDrawOnRoot))
-                    {
-                        continue;
-                    }
-
                     IntVec3 drawOn = shouldDrawOnRoot ? root : companion;
                     IntVec3 drawFrom = shouldDrawOnRoot ? companion : root;
-                    Candidate candidate = EvaluateCandidate(pawn, drawFrom, drawOn);
-                    if (!MatchesTemperaturePass(candidate, comfortableOnly))
-                    {
-                        continue;
-                    }
-
-                    if (candidate.IsBetterThan(bestCandidate))
-                    {
-                        bestCandidate = candidate;
-                    }
+                    candidate = EvaluateCandidate(pawn, drawFrom, drawOn);
+                    return candidate.IsValid;
                 }
             }
 
-            return bestCandidate.IsValid;
+            return false;
         }
 
         private static Candidate EvaluateCandidate(Pawn pawn, IntVec3 drawFrom, IntVec3 drawOn)

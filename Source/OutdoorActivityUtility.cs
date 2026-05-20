@@ -242,6 +242,11 @@ namespace HelicopterParenting
 
         private static bool IsGoodDestination(IntVec3 cell, Map map, bool careAboutDanger)
         {
+            if (!cell.Standable(map))
+            {
+                return false;
+            }
+
             if (careAboutDanger && cell.GetTerrain(map).dangerous)
             {
                 return false;
