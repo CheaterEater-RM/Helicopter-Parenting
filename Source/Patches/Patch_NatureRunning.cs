@@ -29,7 +29,11 @@ namespace HelicopterParenting.Patches
             if (OutdoorActivityUtility.TryFindSafeNatureRunningTarget(searcher, out LocalTargetInfo saferTarget))
             {
                 interestTarget = saferTarget;
+                return;
             }
+
+            interestTarget = LocalTargetInfo.Invalid;
+            __result = false;
         }
     }
 }
