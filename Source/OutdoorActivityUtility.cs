@@ -27,9 +27,9 @@ namespace HelicopterParenting
             return cell.x < edgeBuffer || cell.z < edgeBuffer || cell.x >= map.Size.x - edgeBuffer || cell.z >= map.Size.z - edgeBuffer;
         }
 
-        public static bool HasNearbyWildPredator(IntVec3 cell, Map map)
+        public static bool HasNearbyPredatorThreat(IntVec3 cell, Map map, Pawn searcher)
         {
-            if (map == null || HelicopterParenting_Mod.Settings == null || !HelicopterParenting_Mod.Settings.avoidPredators)
+            if (map == null || searcher == null || HelicopterParenting_Mod.Settings == null || !HelicopterParenting_Mod.Settings.avoidPredators)
             {
                 return false;
             }
@@ -39,7 +39,12 @@ namespace HelicopterParenting
             for (int index = 0; index < allPawnsSpawned.Count; index++)
             {
                 Pawn predator = allPawnsSpawned[index];
-                if (predator.Dead || predator.Downed || predator.Faction != null || predator.RaceProps == null || !predator.RaceProps.predator)
+                if (predator.Dead || predator.Downed || predator == searcher || predator.RaceProps == null || !predator.RaceProps.predator)
+                {
+                    continue;
+                }
+
+                if (predator.Faction == Faction.OfPlayer || (predator.Faction != null && !predator.HostileTo(searcher)))
                 {
                     continue;
                 }
@@ -65,7 +70,7 @@ namespace HelicopterParenting
                 return false;
             }
 
-            return !HasNearbyWildPredator(cell, searcher.Map);
+            return !HasNearbyPredatorThreat(cell, searcher.Map, searcher);
         }
 
         public static bool TryFindSafeNatureRunningTarget(Pawn searcher, out LocalTargetInfo interestTarget)
@@ -147,7 +152,7 @@ namespace HelicopterParenting
                 return false;
             }
 
-            if (IsWithinEdgeBuffer(cell, pawn.Map) || HasNearbyWildPredator(cell, pawn.Map))
+            if (IsWithinEdgeBuffer(cell, pawn.Map) || HasNearbyPredatorThreat(cell, pawn.Map, pawn))
             {
                 return false;
             }
