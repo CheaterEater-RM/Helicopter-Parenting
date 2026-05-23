@@ -58,6 +58,7 @@
 | `enableFloorDrawFix` | `true` | Toggle freezer-safe floor drawing |
 | `enableNatureRunFix` | `true` | Toggle safer nature running |
 | `enableSkyDreamFix` | `true` | Toggle safer sky dreaming |
+| `enableDiagnostics` | `false` | Emit troubleshooting log messages when the mod redirects, cancels, or interrupts an activity |
 
 ## Verified vanilla constraints
 

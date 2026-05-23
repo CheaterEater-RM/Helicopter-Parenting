@@ -12,5 +12,7 @@
   <HelicopterParenting_RejectDuringThreatsTooltip>Disable nature running and sky dreaming during active hostile threats.</HelicopterParenting_RejectDuringThreatsTooltip>
   <HelicopterParenting_MapEdgeBufferLabel>Map edge buffer: {0}</HelicopterParenting_MapEdgeBufferLabel>
   <HelicopterParenting_PredatorScanRadiusLabel>Predator scan radius: {0}</HelicopterParenting_PredatorScanRadiusLabel>
+  <HelicopterParenting_EnableDiagnosticsLabel>Enable diagnostics logging</HelicopterParenting_EnableDiagnosticsLabel>
+  <HelicopterParenting_EnableDiagnosticsTooltip>Write troubleshooting messages when Helicopter Parenting redirects, cancels, or interrupts child learning jobs. Off by default.</HelicopterParenting_EnableDiagnosticsTooltip>
   <HelicopterParenting_ResetSettingsLabel>Reset to defaults</HelicopterParenting_ResetSettingsLabel>
 </LanguageData>

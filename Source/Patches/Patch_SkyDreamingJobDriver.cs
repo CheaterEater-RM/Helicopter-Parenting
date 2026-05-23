@@ -25,7 +25,20 @@ namespace HelicopterParenting.Patches
             {
                 if (toil.defaultCompleteMode == ToilCompleteMode.Delay)
                 {
-                    toil.FailOn(() => pawn.IsHashIntervalTick(250) && OutdoorActivityUtility.ShouldInterruptSkyDreamingForPredator(pawn));
+                    toil.AddEndCondition(() =>
+                    {
+                        if (!pawn.IsHashIntervalTick(250) || !OutdoorActivityUtility.ShouldInterruptSkyDreamingForPredator(pawn))
+                        {
+                            return JobCondition.Ongoing;
+                        }
+
+                        int predatorScanRadius = HelicopterParenting_Mod.Settings?.predatorScanRadius ?? 0;
+                        DiagnosticsUtility.LogIntervention(
+                            "Sky dreaming interrupted",
+                            pawn,
+                            $"interrupted at {DiagnosticsUtility.DescribeCell(pawn.Position)} because a predator entered the {predatorScanRadius}-tile buffer during active sky dreaming.");
+                        return JobCondition.Incompletable;
+                    });
                 }
 
                 yield return toil;

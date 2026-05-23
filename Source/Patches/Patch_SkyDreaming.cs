@@ -15,23 +15,41 @@ namespace HelicopterParenting.Patches
                 return;
             }
 
-            if (!JoyUtility.EnjoyableOutsideNow(pawn) || OutdoorActivityUtility.ShouldBlockOutdoorActivities(pawn.Map))
+            bool enjoyableOutside = JoyUtility.EnjoyableOutsideNow(pawn);
+            bool blockedDuringThreats = OutdoorActivityUtility.ShouldBlockOutdoorActivities(pawn.Map);
+            if (!enjoyableOutside || blockedDuringThreats)
             {
+                string cancelReason = !enjoyableOutside && blockedDuringThreats
+                    ? "canceled because outdoor joy is not enjoyable right now and outdoor activities are blocked during an active hostile threat."
+                    : (!enjoyableOutside
+                        ? "canceled because outdoor joy is not enjoyable right now."
+                        : "canceled because outdoor activities are blocked during an active hostile threat.");
+                DiagnosticsUtility.LogIntervention("Sky dreaming canceled", pawn, cancelReason);
                 __result = null;
                 return;
             }
 
-            if (OutdoorActivityUtility.IsSkyDreamCellSafe(pawn, __result.targetA.Cell))
+            IntVec3 originalCell = __result.targetA.Cell;
+            if (OutdoorActivityUtility.IsSkyDreamCellSafe(pawn, originalCell))
             {
                 return;
             }
 
+            string unsafeReason = DiagnosticsUtility.Enabled ? DiagnosticsUtility.DescribeSkyDreamUnsafeReason(pawn, originalCell) : null;
             if (OutdoorActivityUtility.TryFindSafeSkyDreamCell(pawn, pawn.Position, out IntVec3 saferCell))
             {
+                DiagnosticsUtility.LogIntervention(
+                    "Sky dreaming redirect",
+                    pawn,
+                    $"redirected target from {DiagnosticsUtility.DescribeCell(originalCell)} to {DiagnosticsUtility.DescribeCell(saferCell)} because the original target violated {unsafeReason}.");
                 __result.targetA = saferCell;
                 return;
             }
 
+            DiagnosticsUtility.LogIntervention(
+                "Sky dreaming canceled",
+                pawn,
+                $"canceled because target {DiagnosticsUtility.DescribeCell(originalCell)} violated {unsafeReason} and no safe replacement was found.");
             __result = null;
         }
     }

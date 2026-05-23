@@ -16,6 +16,7 @@ namespace HelicopterParenting
         public bool enableFloorDrawFix = true;
         public bool enableNatureRunFix = true;
         public bool enableSkyDreamFix = true;
+        public bool enableDiagnostics;
 
         public void ResetToDefaults()
         {
@@ -26,6 +27,7 @@ namespace HelicopterParenting
             enableFloorDrawFix = true;
             enableNatureRunFix = true;
             enableSkyDreamFix = true;
+            enableDiagnostics = false;
         }
 
         public override void ExposeData()
@@ -39,6 +41,7 @@ namespace HelicopterParenting
             Scribe_Values.Look(ref enableFloorDrawFix, "enableFloorDrawFix", true);
             Scribe_Values.Look(ref enableNatureRunFix, "enableNatureRunFix", true);
             Scribe_Values.Look(ref enableSkyDreamFix, "enableSkyDreamFix", true);
+            Scribe_Values.Look(ref enableDiagnostics, "enableDiagnostics", false);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
@@ -89,6 +92,9 @@ namespace HelicopterParenting
                     5,
                     50);
             }
+
+            listing.GapLine();
+            listing.CheckboxLabeled("HelicopterParenting_EnableDiagnosticsLabel".Translate(), ref Settings.enableDiagnostics, "HelicopterParenting_EnableDiagnosticsTooltip".Translate());
 
             listing.GapLine();
             if (listing.ButtonText("HelicopterParenting_ResetSettingsLabel".Translate()))

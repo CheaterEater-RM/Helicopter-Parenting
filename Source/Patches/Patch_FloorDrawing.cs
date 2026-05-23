@@ -21,6 +21,10 @@ namespace HelicopterParenting.Patches
 
             if (FloorDrawingUtility.TryImproveFloorDrawPair(pawn, drawFrom, drawOn, out IntVec3 betterDrawFrom, out IntVec3 betterDrawOn))
             {
+                DiagnosticsUtility.LogIntervention(
+                    "Floor drawing redirect",
+                    pawn,
+                    $"redirected draw pair from {DiagnosticsUtility.DescribeCell(drawFrom)}->{DiagnosticsUtility.DescribeCell(drawOn)} to {DiagnosticsUtility.DescribeCell(betterDrawFrom)}->{DiagnosticsUtility.DescribeCell(betterDrawOn)} because the original room was outside the child's comfortable temperature range.");
                 drawFrom = betterDrawFrom;
                 drawOn = betterDrawOn;
             }
