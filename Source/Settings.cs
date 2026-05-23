@@ -64,6 +64,8 @@ namespace HelicopterParenting
 
         public override void DoSettingsWindowContents(Rect inRect)
         {
+            const float sliderLabelPct = 0.42f;
+
             Listing_Standard listing = new Listing_Standard();
             listing.Begin(inRect);
 
@@ -75,13 +77,17 @@ namespace HelicopterParenting
             listing.CheckboxLabeled("HelicopterParenting_AvoidPredatorsLabel".Translate(), ref Settings.avoidPredators, "HelicopterParenting_AvoidPredatorsTooltip".Translate());
             listing.GapLine();
 
-            Settings.mapEdgeBuffer = Mathf.Clamp(Mathf.RoundToInt(listing.Slider(Settings.mapEdgeBuffer, 5f, 50f)), 5, 50);
-            listing.Label("HelicopterParenting_MapEdgeBufferLabel".Translate(Settings.mapEdgeBuffer));
+            Settings.mapEdgeBuffer = Mathf.Clamp(
+                Mathf.RoundToInt(listing.SliderLabeled("HelicopterParenting_MapEdgeBufferLabel".Translate(Settings.mapEdgeBuffer), Settings.mapEdgeBuffer, 5f, 50f, sliderLabelPct)),
+                5,
+                50);
 
             if (Settings.avoidPredators)
             {
-                Settings.predatorScanRadius = Mathf.Clamp(Mathf.RoundToInt(listing.Slider(Settings.predatorScanRadius, 5f, 50f)), 5, 50);
-                listing.Label("HelicopterParenting_PredatorScanRadiusLabel".Translate(Settings.predatorScanRadius));
+                Settings.predatorScanRadius = Mathf.Clamp(
+                    Mathf.RoundToInt(listing.SliderLabeled("HelicopterParenting_PredatorScanRadiusLabel".Translate(Settings.predatorScanRadius), Settings.predatorScanRadius, 5f, 50f, sliderLabelPct)),
+                    5,
+                    50);
             }
 
             listing.GapLine();
