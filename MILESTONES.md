@@ -32,7 +32,7 @@ Dependencies: shared outdoor safety helper, settings values, nature-running sear
 - Add missing `JoyUtility.EnjoyableOutsideNow(pawn)` gate
 - Validate or replace unsafe sky-dream targets with a dedicated cell-level outdoor search
 - Null the job when no safe replacement exists
-- Keep M3 selection-only; do not modify `JobDriver_Skydreaming` in this milestone
+- Add a lazy in-job predator interrupt so active sky dreaming stops if a predator enters the configured buffer
 
 Dependencies: shared outdoor safety helper, dedicated sky-dream search helper
 

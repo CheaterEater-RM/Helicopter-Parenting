@@ -5,9 +5,9 @@
   <HelicopterParenting_EnableNatureRunFixLabel>Nature running safety</HelicopterParenting_EnableNatureRunFixLabel>
   <HelicopterParenting_EnableNatureRunFixTooltip>Validate nature-running targets against edge and threat safety rules.</HelicopterParenting_EnableNatureRunFixTooltip>
   <HelicopterParenting_EnableSkyDreamFixLabel>Sky dreaming safety</HelicopterParenting_EnableSkyDreamFixLabel>
-  <HelicopterParenting_EnableSkyDreamFixTooltip>Validate or replace unsafe sky-dreaming spots, including predator avoidance when that setting is enabled.</HelicopterParenting_EnableSkyDreamFixTooltip>
+  <HelicopterParenting_EnableSkyDreamFixTooltip>Validate or replace unsafe sky-dreaming spots, and stop active sky dreaming if a predator enters the configured buffer.</HelicopterParenting_EnableSkyDreamFixTooltip>
   <HelicopterParenting_AvoidPredatorsLabel>Avoid nearby predators</HelicopterParenting_AvoidPredatorsLabel>
-  <HelicopterParenting_AvoidPredatorsTooltip>Nature running and sky dreaming reject outdoor spots when a wild or hostile predator is within the configured radius.</HelicopterParenting_AvoidPredatorsTooltip>
+  <HelicopterParenting_AvoidPredatorsTooltip>Nature running rejects outdoor spots, and sky dreaming rejects or interrupts them, when a wild or hostile predator is within the configured radius.</HelicopterParenting_AvoidPredatorsTooltip>
   <HelicopterParenting_RejectDuringThreatsLabel>Block outdoor activities during threats</HelicopterParenting_RejectDuringThreatsLabel>
   <HelicopterParenting_RejectDuringThreatsTooltip>Disable nature running and sky dreaming during active hostile threats.</HelicopterParenting_RejectDuringThreatsTooltip>
   <HelicopterParenting_MapEdgeBufferLabel>Map edge buffer: {0}</HelicopterParenting_MapEdgeBufferLabel>

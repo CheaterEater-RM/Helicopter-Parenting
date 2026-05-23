@@ -66,7 +66,7 @@
 - `NatureRunningUtility.TryFindNatureInterestTarget` already calls `JoyUtility.EnjoyableOutsideNow(searcher)`
 - `NatureRunningUtility.TryFindNatureInterestTarget` is also used by `JobDriver_NatureRunning.FindInterestingThing`, so patching it affects both job assignment and in-job retargeting
 - `LearningGiver_Skydreaming.TryGiveJob` does not call `JoyUtility.EnjoyableOutsideNow(pawn)`
-- `JobDriver_Skydreaming` does not re-check weather, threats, or predator proximity after the job starts; a selection-only patch changes startup behavior, not mid-job interruption behavior
+- Vanilla `JobDriver_Skydreaming` does not re-check weather, threats, or predator proximity after the job starts; the mod now adds a lazy predator interruption, but weather and threat handling remain selection-only
 - `RCellFinder.TryFindAllowedUnroofedSpotOutsideColony` exposes only a region-level `extraRegionValidator`; it cannot guarantee cell-level edge filtering by itself
 - `RCellFinder.TryFindAllowedUnroofedSpotOutsideColony` has one vanilla caller in 1.6: `LearningGiver_Skydreaming`
 - `RCellFinder.IsGoodDestinationFor` is private, so any custom sky-dream search helper must inline equivalent destination checks rather than call the vanilla helper directly
@@ -112,7 +112,7 @@ Current working assumption for implementation prep: null the job, because it is 
 
 ### M3 interruption scope
 
-Resolved for the first implementation pass: M3 is selection-only. If the mod only patches target selection, sky dreaming will still continue after a raid, toxic fallout, or bad weather begins mid-job because `JobDriver_Skydreaming` never revalidates those conditions. Do not touch `JobDriver_Skydreaming` in M1-M3.
+Current implementation: sky dreaming still treats weather and threat handling as selection-only, but active sky dreaming now aborts when predator avoidance is enabled and a predator enters the configured buffer.
 
 ## In Progress
 
@@ -121,4 +121,4 @@ The current design is ready for implementation once the following source-backed 
 1. The scaffold should include a dedicated outdoor safety helper and a dedicated sky-dream replacement helper, not just three isolated patch files.
 2. The template solution file must be corrected from `Any CPU` to `AnyCPU` everywhere before the first build, or Visual Studio can silently skip the project.
 3. M2 requires a nature-running search helper that mirrors the vanilla BFS constraints; post-validating the chosen cell is not enough if the design expects a real safe replacement.
-4. M3 is selection-only for the first implementation pass; do not patch the sky-dream job driver.
+4. M3 keeps weather and threat handling selection-only, but now includes a lazy in-job predator interrupt for sky dreaming.

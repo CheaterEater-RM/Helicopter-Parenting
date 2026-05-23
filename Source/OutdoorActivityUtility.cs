@@ -160,6 +160,16 @@ namespace HelicopterParenting
             return pawn.ComfortableTemperatureAtCell(cell, pawn.Map);
         }
 
+        public static bool ShouldInterruptSkyDreamingForPredator(Pawn pawn)
+        {
+            if (pawn?.Map == null || HelicopterParenting_Mod.Settings == null || !HelicopterParenting_Mod.Settings.enableSkyDreamFix)
+            {
+                return false;
+            }
+
+            return HasNearbyPredatorThreat(pawn.Position, pawn.Map, pawn);
+        }
+
         public static bool TryFindSafeSkyDreamCell(Pawn pawn, IntVec3 root, out IntVec3 result)
         {
             result = IntVec3.Invalid;
