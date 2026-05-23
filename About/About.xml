@@ -7,7 +7,7 @@
     <li>1.6</li>
   </supportedVersions>
   <description>Keeps children from picking dangerous learning spots by steering floor drawing away from extreme indoor temperatures and outdoor activities away from unsafe map-edge targets. Requires Biotech.</description>
-  <modVersion>0.1.0</modVersion>
+  <modVersion>1.0</modVersion>
   <modDependencies>
     <li>
       <packageId>brrainz.harmony</packageId>
@@ -22,6 +22,9 @@
   <loadAfter>
     <li>brrainz.harmony</li>
     <li>Ludeon.RimWorld</li>
+    <li>Ludeon.RimWorld.Royalty</li>
+    <li>Ludeon.RimWorld.Ideology</li>
     <li>Ludeon.RimWorld.Biotech</li>
+    <li>Ludeon.RimWorld.Anomaly</li>
   </loadAfter>
 </ModMetaData>
