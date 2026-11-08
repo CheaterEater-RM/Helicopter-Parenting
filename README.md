@@ -43,3 +43,7 @@ overhauls one of those activities, Helicopter Parenting just steps aside for it.
 ## License
 
 MIT
+
+## Documentation
+
+Design, engineering, history and requests: the Garden note `design-helicopter-parenting` (`garden/design/helicopter-parenting/design-helicopter-parenting.md`).
