@@ -1,3 +1,4 @@
+using System.Reflection;
 using HarmonyLib;
 using Verse;
 
@@ -9,7 +10,7 @@ namespace HelicopterParenting
         static HelicopterParenting_Init()
         {
             Harmony harmony = new Harmony("com.cheatereater.helicopterparenting");
-            harmony.PatchAll();
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
 
             if (Prefs.DevMode)
             {
