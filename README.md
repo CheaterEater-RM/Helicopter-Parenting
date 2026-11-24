@@ -30,7 +30,7 @@ Everything is configurable in the mod options:
 
 ## Requirements
 
-- RimWorld 1.6
+- RimWorld 1.6 or 1.7
 - Biotech
 - Harmony
 
