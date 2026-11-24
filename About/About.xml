@@ -8,7 +8,7 @@
     <li>1.7</li>
   </supportedVersions>
   <description>Keeps children from picking dangerous learning spots by steering floor drawing away from extreme indoor temperatures and outdoor activities away from unsafe map-edge targets. Requires Biotech.</description>
-  <modVersion>1.0</modVersion>
+  <modVersion>1.01</modVersion>
   <modDependencies>
     <li>
       <packageId>brrainz.harmony</packageId>
